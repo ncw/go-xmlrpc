@@ -105,7 +105,7 @@ func next(p *xml.Decoder) (xml.Name, interface{}, error) {
 			// name
 			se, e = nextStart(p)
 			if se.Name.Local != "name" {
-				return xml.Name{}, nil, errors.New("invalid response")
+				return xml.Name{}, nil, errors.New("invalid response: name not found")
 			}
 			if e != nil {
 				break
@@ -122,7 +122,7 @@ func next(p *xml.Decoder) (xml.Name, interface{}, error) {
 			// value
 			_, value, e := next(p)
 			if se.Name.Local != "value" {
-				return xml.Name{}, nil, errors.New("invalid response")
+				return xml.Name{}, nil, errors.New("invalid response: value not found")
 			}
 			if e != nil {
 				break
@@ -267,19 +267,19 @@ func Call(url, name string, args ...interface{}) (v interface{}, e error) {
 	p := xml.NewDecoder(r.Body)
 	se, e := nextStart(p) // methodResponse
 	if se.Name.Local != "methodResponse" {
-		return nil, errors.New("invalid response")
+		return nil, errors.New("invalid response: methodResponse not found")
 	}
 	se, e = nextStart(p) // params
 	if se.Name.Local != "params" {
-		return nil, errors.New("invalid response")
+		return nil, errors.New("invalid response: params not found")
 	}
 	se, e = nextStart(p) // param
 	if se.Name.Local != "param" {
-		return nil, errors.New("invalid response")
+		return nil, errors.New("invalid response: param not found")
 	}
 	se, e = nextStart(p) // value
 	if se.Name.Local != "value" {
-		return nil, errors.New("invalid response")
+		return nil, errors.New("invalid response: value not found")
 	}
 	_, v, e = next(p)
 	return v, e
